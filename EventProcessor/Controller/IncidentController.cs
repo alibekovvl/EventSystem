@@ -1,7 +1,6 @@
-﻿using EventProcessor.DTO;
-using EventProcessor.Models;
+﻿using EventGenerator.Models;
+using EventProcessor.DTO;
 using EventProcessor.Services.Interfaces;
-using EventProcessor.SortAndPagination;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventProcessor.Controller;
@@ -26,7 +25,7 @@ public class IncidentController : ControllerBase
         return Ok(incidents);
     }
     [HttpPost]
-    public async Task<IActionResult> ProcessEvent([FromBody] Event @event)
+    public async Task<IActionResult> ProcessEvent( [FromBody] Event @event)
     {
         await _incidentService.ProcessEventAsync(@event);
         return Ok();

@@ -1,6 +1,6 @@
 ﻿namespace EventProcessor.Models;
 
-public class Event
+public class EventPr
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public EventTypeEnum Type { get; set; }

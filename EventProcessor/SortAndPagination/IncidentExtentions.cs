@@ -1,4 +1,5 @@
-﻿using EventProcessor.Models;
+﻿using EventGenerator.Models;
+using EventProcessor.Models;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace EventProcessor.SortAndPagination;

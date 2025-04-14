@@ -13,6 +13,7 @@ public class EventGeneratorService : BackgroundService
     public EventGeneratorService(IEventSender eventSender)
     {
         _eventSender = eventSender;
+        
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -24,6 +25,7 @@ public class EventGeneratorService : BackgroundService
                 await GenerateAndSendEventsAsync();
                 continue;
             } // Генерация, если прошло больше 2 сек.
+            
             //Иначе ждем ост. время (0 ;(2000 - timesinselastevent))
             await Task.Delay (_random.Next(0, (int)(_delay - timeSinceLastEvent).TotalMilliseconds),stoppingToken);
             await GenerateAndSendEventsAsync();
@@ -36,12 +38,15 @@ public class EventGeneratorService : BackgroundService
     }
     private async Task GenerateAndSendEventsAsync()
     {
+        
         var @event = new Event()
         {
             Type = (EventTypeEnum)_random.Next(1, 4),
             Time = DateTime.UtcNow
         };
-        await _eventSender.SendEventAsync(@event);
+        var sendResult = await _eventSender.SendEventAsync(@event);
+        
+       
         _lastEventTime = @event.Time;
     }
 }

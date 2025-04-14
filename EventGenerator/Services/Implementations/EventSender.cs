@@ -14,18 +14,35 @@ public class EventSender : IEventSender
         _logger = logger;
     }
 
-    public async Task SendEventAsync(Event @event)
+    public async Task<bool> SendEventAsync(Event @event)
     {
-        try
+        const int maxRetries = 5;
+        var delay = TimeSpan.FromSeconds(2);
+
+        for (int i = 0; i <= maxRetries; i++)
         {
-            var response = await _httpclient.PostAsJsonAsync($"/api/incidents",@event);
-            response.EnsureSuccessStatusCode();
-            _logger.LogInformation($"Event sent: {@event.Id}, Type: {@event.Type}");
+            try
+            {
+                var response = await _httpclient.PostAsJsonAsync($"/api/incidents", @event);
+                if (response.IsSuccessStatusCode)
+                    return true;
+                _logger.LogError($"Error sending event: {@event}");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception while sending event. Attempt {i}", i);
+            }
+
+            if (i < maxRetries)
+            {
+                await Task.Delay(delay);
+                delay = delay * 2;
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to send event");
-            throw;
-        }
+
+        _logger.LogError($"Max retries reached. Failed to send event: {@event}", @event);
+        
+        return false;
     }
 }

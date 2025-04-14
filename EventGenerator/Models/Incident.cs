@@ -1,4 +1,5 @@
-﻿namespace EventProcessor.Models;
+﻿
+namespace EventGenerator.Models;
 
 public class Incident
 {

@@ -4,5 +4,5 @@ namespace EventGenerator.Services.Interfaces;
 
 public interface IEventSender
 {
-    Task SendEventAsync(Event @event);
+    Task<bool> SendEventAsync(Event @event);
 }

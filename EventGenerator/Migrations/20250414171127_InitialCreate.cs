@@ -3,14 +3,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EventProcessor.Migrations
+namespace EventGenerator.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "BufferedEvents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EventType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Time = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsSent = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BufferedEvents", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Incidents",
                 columns: table => new
@@ -40,7 +55,8 @@ namespace EventProcessor.Migrations
                         name: "FK_Events_Incidents_IncidentId",
                         column: x => x.IncidentId,
                         principalTable: "Incidents",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -52,6 +68,9 @@ namespace EventProcessor.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "BufferedEvents");
+
             migrationBuilder.DropTable(
                 name: "Events");
 
