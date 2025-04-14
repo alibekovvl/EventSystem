@@ -1,6 +1,7 @@
 ﻿using EventProcessor.Data;
 using EventProcessor.Models;
 using EventProcessor.Services.Interfaces;
+using EventProcessor.SortAndPagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventProcessor.Services.Implementations;
@@ -87,11 +88,14 @@ public class IncidentService : IIncidentService
             await _dbContext.SaveChangesAsync();
         }
     }
-    public async Task<List<Incident>> GetIncidentsAsync()
+    public async Task<List<Incident>> GetIncidentsAsync(int page, int pageSize, string? sortBy, bool descending)
     {
-        return await _dbContext.Incidents
-            .Include(i => i.Events)
-            .OrderByDescending(i => i.Time)
-            .ToListAsync();
+        var query = _dbContext.Incidents.Include(i => i.Events).AsQueryable();
+        var pageParams = new PageParams{Page = page, PageSize = pageSize};
+        var sortParams = new SortParams{SortBy = sortBy ?? "Time", Descending = descending};
+        
+        query = query.ApplySorting(sortParams).ApplyPaging(pageParams);
+        
+        return await query.ToListAsync();
     }
 }

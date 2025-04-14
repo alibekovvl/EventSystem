@@ -9,4 +9,13 @@ public class AppDbContext : DbContext
     
     public DbSet<Event> Events { get; set; }
     public DbSet<Incident> Incidents { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Incident>()
+            .HasMany(i => i.Events)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
+            
+    }
 }
