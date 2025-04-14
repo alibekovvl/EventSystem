@@ -18,13 +18,14 @@ public class EventSender : IEventSender
     {
         try
         {
-            var response = await _httpclient.PostAsJsonAsync($"/api/events",@event);
+            var response = await _httpclient.PostAsJsonAsync($"/api/incidents",@event);
             response.EnsureSuccessStatusCode();
             _logger.LogInformation($"Event sent: {@event.Id}, Type: {@event.Type}");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to send event");
+            throw;
         }
     }
 }

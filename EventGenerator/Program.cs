@@ -5,10 +5,11 @@ using EventGenerator.Services.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<IEventSender, EventSender>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5243"); // URL EventProcessor
+    client.BaseAddress = new Uri("http://localhost:5081"); 
 });
-builder.Services.AddHostedService<EventGeneratorService>();
 
+builder.Services.AddHostedService<EventGeneratorService>();
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
